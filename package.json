@@ -1,0 +1,48 @@
+{
+  "name": "changelog-generator",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Changelog Generator Github Action",
+  "author": {
+    "name": "Dan Petitt",
+    "email": "danp@coderanger.com",
+    "url": "https://www.coderanger.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/danpetitt/changelog-generator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danpetitt/changelog-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/danpetitt/changelog-generator/issues"
+  },
+  "keywords": [
+    "actions",
+    "changelog",
+    "generator"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "format": "prettier --write src",
+    "lint": "eslint src",
+    "build": "tsc",
+    "watch": "npm run build -- --watch",
+    "all": "npm run format && npm run lint && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "@vercel/ncc": "^0.24.1",
+    "eslint": "^7.10.0",
+    "jest": "^26.5.3",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  }
+}
