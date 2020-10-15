@@ -30,6 +30,3 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
-
-# Nuxt.js build / generate output
-dist

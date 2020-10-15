@@ -1,0 +1,43 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    env:
+      RELEASE: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm run all
+      - run: |
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          echo ::set-output name=heading::## Release $RELEASE ($CURRENT_DATE)
+        id: release_heading
+
+      - id: changelog
+        uses: danpetitt/changelog-generator@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate: 'true'
+          path: './CHANGELOG.md'
+          title: '# Changelog Generator'
+          section: ${{ steps.release_heading.outputs.heading }}
+          files_to_commit: './CHANGELOG.md'
+          commit_message: 'chore(pipeline updates): [skip ci]'
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
