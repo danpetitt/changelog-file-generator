@@ -30,3 +30,6 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+
+# Build folders
+dist
