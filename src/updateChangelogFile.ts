@@ -1,9 +1,10 @@
 import { info, getInput } from '@actions/core';
 import * as fs from 'fs';
 
-export async function updateChangelogFile(changeLog: string): Promise<void> {
-  let changeLogPath = getInput('path', { required: false });
-  if (changeLogPath.length === 0) changeLogPath = './CHANGELOG.md';
+export async function updateChangelogFile(
+  changeLogPath: string,
+  changeLog: string,
+): Promise<void> {
   info(`Updating changelog file at ${changeLogPath}`);
 
   let title = getInput('title', { required: false }).trim();
@@ -41,7 +42,10 @@ function createNewContent(
     updatedContent = `${title}\n\n${addNewReleaseSection(newContent, section)}`;
   } else {
     // Remove original heading so we can add our new section then add it back
-    const strippedContent = existingContent.trim().replace(/^# .*?\n+/g, '').trim();
+    const strippedContent = existingContent
+      .trim()
+      .replace(/^# .*?\n+/g, '')
+      .trim();
 
     const releaseSection = addNewReleaseSection(newContent, section);
     updatedContent = `${title}\n\n${releaseSection}${strippedContent}`;

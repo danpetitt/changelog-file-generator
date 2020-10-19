@@ -19,8 +19,8 @@ function run() {
         try {
             const token = core_1.getInput('token', { required: true });
             const exclude = core_1.getInput('exclude', { required: false }).split(',');
-            const updateFile = core_1.getInput('generate', { required: false });
-            const files = core_1.getInput('files_to_commit', { required: false }).split(',');
+            const updateFile = core_1.getInput('file', { required: false });
+            const files = core_1.getInput('files_to_commit', { required: false });
             const octokit = github_1.getOctokit(token);
             const { repo: { owner, repo }, sha, } = github_1.context;
             const { data: tags } = yield octokit.repos.listTags({
@@ -40,11 +40,11 @@ function run() {
             const changelog = yield changelog_1.generate(octokit, exclude, owner, repo, tagRef);
             core_1.info(changelog);
             core_1.setOutput('changelog', changelog);
-            if (updateFile === 'true') {
-                yield updateChangelogFile_1.updateChangelogFile(changelog);
+            if (updateFile.length > 0) {
+                yield updateChangelogFile_1.updateChangelogFile(updateFile, changelog);
             }
             if (files.length) {
-                yield commitFiles_1.commitFiles(files);
+                yield commitFiles_1.commitFiles(files.split(','));
             }
         }
         catch (error) {

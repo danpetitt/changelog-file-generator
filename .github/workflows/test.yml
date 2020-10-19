@@ -48,8 +48,7 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          generate: 'true'
-          path: './CHANGELOG.md'
+          file: './CHANGELOG.md'
           title: '# ChangeLog for Auto Changelog Github Action'
           section: ${{ steps.heading_step.outputs.heading }}
       - run: cat ./CHANGELOG.md | grep -q '# ChangeLog for Auto Changelog Github Action' ; echo $?
@@ -70,8 +69,7 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          generate: 'true'
-          path: './CHANGELOG.md'
+          file: './CHANGELOG.md'
           title: '# ChangeLog for Auto Changelog Github Action'
           section: ${{ steps.heading_step.outputs.heading }}
       - run: cat ./CHANGELOG.md | grep -q '# ChangeLog for Auto Changelog Github Action' ; echo $?
@@ -92,8 +90,7 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          generate: 'true'
-          path: './CHANGELOG.md'
+          file: './CHANGELOG.md'
           title: '# ChangeLog for Auto Changelog Github Action'
           section: ${{ steps.heading_step.outputs.heading }}
           files_to_commit: './CHANGELOG.md'

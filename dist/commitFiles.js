@@ -20,10 +20,13 @@ const baseDir = path_1.default.join(process.cwd(), core_1.getInput('cwd') || '')
 const git = simple_git_1.default({ baseDir });
 function commitFiles(files) {
     return __awaiter(this, void 0, void 0, function* () {
-        core_1.info(`Git running in dir ${baseDir}`);
+        core_1.info(`Committing files to Git running in dir ${baseDir}`);
         let commitMessage = core_1.getInput('commit_message', { required: false });
         if (commitMessage.length === 0)
             commitMessage = 'chore(pipeline updates): [skip ci]';
+        const name = core_1.getInput('author_name', { required: true }).trim();
+        const email = core_1.getInput('author_email', { required: true }).trim();
+        yield configGit(name, email);
         yield add(files);
         core_1.info('Checking for changes...');
         const changedFiles = (yield git.diffSummary(['--cached'])).files.length;
@@ -35,21 +38,35 @@ function commitFiles(files) {
     });
 }
 exports.commitFiles = commitFiles;
-function add(files, { logWarning = true, ignoreErrors = false } = {}) {
-    return git
-        .add(files, (e, d) => ignoreErrors ? null : core_1.info(`${e}: ${d !== null && d !== void 0 ? d : ''}`))
-        .catch((e) => {
-        if (ignoreErrors)
-            return;
-        if (e.message.includes('fatal: pathspec') &&
-            e.message.includes('did not match any files')) {
-            logWarning && core_1.warning('Add command did not match any file.');
-        }
-        else {
-            throw e;
-        }
+function configGit(name, email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield git
+            .addConfig('user.email', email, undefined, log)
+            .addConfig('user.name', name, undefined, log);
+        core_1.info('Current git config\n' +
+            JSON.stringify((yield git.listConfig()).all, null, 2));
     });
 }
+function add(files, { logWarning = true, ignoreErrors = false } = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        core_1.info(`Adding ${files.length} files`);
+        return git
+            .add(files, (e, // eslint-disable-line @typescript-eslint/no-explicit-any
+        d) => (ignoreErrors ? null : core_1.info(`${e}: ${d !== null && d !== void 0 ? d : ''}`)))
+            .catch((e) => {
+            if (ignoreErrors)
+                return;
+            if (e.message.includes('fatal: pathspec') &&
+                e.message.includes('did not match any files')) {
+                logWarning && core_1.warning('Add command did not match any file.');
+            }
+            else {
+                throw e;
+            }
+        });
+    });
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function log(err, data) {
     if (data)
         console.log(data);

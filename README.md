@@ -42,21 +42,17 @@ The `flag` is optional (if provided, it must be surrounded in square brackets). 
 
 Exclude selected commit types (comma separated).
 
-#### `generate`
+#### `file`
 
-Generate or update a change log file.
-
-#### `path`
-
-If `generate` set, specifies the path of the change log file to update (default `./CHANGELOG.md`)
+Specify a file path to generate or update a change log file.
 
 #### `title`
 
-If `generate` set, specifies the markdown text to use as the file heading (default `# Changelog`)
+If `file` set, specifies the markdown text to use as the file heading (default `# Changelog`)
 
 #### `section`
 
-If `generate` set, specifies the tagged markdown text to use for each release section (default `## Release {{ GITHUB_REF }}`)
+If `file` set, specifies the tagged markdown text to use for each release section (default `## Release {{ GITHUB_REF }}`)
 
 #### `files_to_commit`
 
@@ -87,8 +83,7 @@ uses: danpetitt/changelog-file-generator@v1.0.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   exclude: 'perf,other,breaking'
-  generate: 'true'
-  path: './CHANGELOG.md'
+  file: './CHANGELOG.md'
   title: '# My Project Change Log'
   section: '## Release: {{ GITHUB_REF }}'
   files_to_commit: './CHANGELOG.md'

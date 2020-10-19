@@ -31,13 +31,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateChangelogFile = void 0;
 const core_1 = require("@actions/core");
 const fs = __importStar(require("fs"));
-function updateChangelogFile(changeLog) {
+function updateChangelogFile(changeLogPath, changeLog) {
     return __awaiter(this, void 0, void 0, function* () {
-        let changeLogPath = core_1.getInput('path', { required: false });
-        if (changeLogPath.length === 0)
-            changeLogPath = './CHANGELOG.md';
         core_1.info(`Updating changelog file at ${changeLogPath}`);
-        let title = core_1.getInput('title', { required: false });
+        let title = core_1.getInput('title', { required: false }).trim();
         if (title.length === 0)
             title = '# Changelog';
         let section = core_1.getInput('section', { required: false });
@@ -62,12 +59,15 @@ function createNewContent(existingContent, newContent, title, section) {
     }
     else {
         // Remove original heading so we can add our new section then add it back
-        const strippedContent = existingContent.replace(title, '').trim();
+        const strippedContent = existingContent
+            .trim()
+            .replace(/^# .*?\n+/g, '')
+            .trim();
         const releaseSection = addNewReleaseSection(newContent, section);
         updatedContent = `${title}\n\n${releaseSection}${strippedContent}`;
     }
-    return updatedContent;
+    return updatedContent.trim();
 }
 function addNewReleaseSection(content, section) {
-    return `\n\n${section}\n\n${content}\n\n`;
+    return `${section}\n\n${content}\n\n`;
 }

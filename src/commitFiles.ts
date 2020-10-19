@@ -33,7 +33,10 @@ async function configGit(name: string, email: string): Promise<void> {
     .addConfig('user.email', email, undefined, log)
     .addConfig('user.name', name, undefined, log);
 
-  info('Current git config\n' + JSON.stringify((await git.listConfig()).all, null, 2))  
+  info(
+    'Current git config\n' +
+      JSON.stringify((await git.listConfig()).all, null, 2),
+  );
 }
 
 async function add(
@@ -43,9 +46,10 @@ async function add(
   info(`Adding ${files.length} files`);
 
   return git
-    .add(files, (e: any, d?: any) =>
-      ignoreErrors ? null : info(`${e}: ${d ?? ''}`),
-    )
+    .add(files, (
+      e: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      d?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    ) => (ignoreErrors ? null : info(`${e}: ${d ?? ''}`)))
     .catch((e: Error) => {
       if (ignoreErrors) return;
 
@@ -60,6 +64,7 @@ async function add(
     });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function log(err: any | Error, data?: any) {
   if (data) console.log(data);
   if (err) error(err);

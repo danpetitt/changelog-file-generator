@@ -8,7 +8,7 @@ async function run() {
   try {
     const token = getInput('token', { required: true });
     const exclude = getInput('exclude', { required: false }).split(',');
-    const updateFile = getInput('generate', { required: false });
+    const updateFile = getInput('file', { required: false });
     const files = getInput('files_to_commit', { required: false });
 
     const octokit = getOctokit(token);
@@ -37,8 +37,8 @@ async function run() {
 
     setOutput('changelog', changelog);
 
-    if (updateFile === 'true') {
-      await updateChangelogFile(changelog);
+    if (updateFile.length > 0) {
+      await updateChangelogFile(updateFile, changelog);
     }
 
     if (files.length) {
