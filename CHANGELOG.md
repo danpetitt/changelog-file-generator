@@ -1,19 +1,13 @@
 # ChangeLog for Auto Changelog Github Action
 
-## [Release v1.0.3](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.3) - 2020-10-19
+## Release - 2020-10-19
 
 ### Bug Fixes
 
-* **Commit:**
-  * Resolve commit issues ([897c2cf6](https://github.com/danpetitt/changelog-file-generator/commit/897c2cf69a564d3a5f01e805690587a0253d98c1))
-  
-## [Release v1.0.2](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.2) - 2020-10-19
+* **Logs:**
+  * Added some logging ([48bb596f](https://github.com/danpetitt/changelog-file-generator/commit/48bb596fe3d71754b42e761c4ec60aa930cbc297))
 
-### Bug Fixes
+### Chores
 
-* **Committing changes:**
-  * Resolved issues ([916b4830](https://github.com/danpetitt/changelog-file-generator/commit/916b4830fbdbce4ceaf3c889e178a981246bda0a))
-* **Options:**
-  * Simplified options ([76192a54](https://github.com/danpetitt/changelog-file-generator/commit/76192a54d04685ab9206d68ecc7a145e860068a8))
-* **Release:**
-  * Fixed release build ([934efc3a](https://github.com/danpetitt/changelog-file-generator/commit/934efc3aa80615161da2f1d296b6bc9627177d96))
+* **pipeline updates:**
+  * [skip ci] ([608ee8be](https://github.com/danpetitt/changelog-file-generator/commit/608ee8beea0f80e0cc49361b62a55f1168c2a9e2))
