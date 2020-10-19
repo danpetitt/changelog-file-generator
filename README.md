@@ -1,4 +1,4 @@
-# Changelog Generator
+# Changelog File Generator
 
 This action is based upon auto-changelog by [Ardalan Amini](https://github.com/ardalanamini/auto-changelog) with some updates to generate a changelog file and commit it to your repo.
 
@@ -83,7 +83,7 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-generator@v1.0.0
+uses: danpetitt/changelog-file-generator@v1.0.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   exclude: 'perf,other,breaking'
