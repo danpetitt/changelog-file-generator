@@ -1,5 +1,5 @@
-name: 'Changelog Generator'
-description: 'Changelog Generator Github Action'
+name: 'Changelog File Generator'
+description: 'Changelog File Generator Github Action'
 author: 'Dan Petitt (Coderanger.com)'
 branding:
   icon: 'clock'
