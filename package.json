@@ -1,6 +1,6 @@
 {
   "name": "changelog-file-generator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Changelog File Generator Github Action",
   "author": {
