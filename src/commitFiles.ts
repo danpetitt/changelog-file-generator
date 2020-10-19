@@ -16,7 +16,11 @@ export async function commitFiles(files: string[]): Promise<void> {
       : process.env.GITHUB_REF?.substring(11);
 
   const branch = defaultBranch || '';
-  if (isPR) info(`> Running for a PR, the action will use '${branch}' as ref.`);
+  if (isPR) {
+    info(`> Running for a PR, the action will use '${branch}' as ref.`);
+  } else {
+    info(`> Running on branch '${branch}'`);
+  }
 
   let commitMessage = getInput('commit_message', { required: false });
   if (commitMessage.length === 0)
