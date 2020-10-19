@@ -1,21 +1,21 @@
 {
-  "name": "changelog-generator",
-  "version": "1.0.2",
+  "name": "changelog-file-generator",
+  "version": "1.0.3",
   "private": true,
-  "description": "Changelog Generator Github Action",
+  "description": "Changelog File Generator Github Action",
   "author": {
     "name": "Dan Petitt",
     "email": "danp@coderanger.com",
     "url": "https://www.coderanger.com"
   },
   "license": "MIT",
-  "homepage": "https://github.com/danpetitt/changelog-generator#readme",
+  "homepage": "https://github.com/danpetitt/changelog-file-generator#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danpetitt/changelog-generator.git"
+    "url": "git+https://github.com/danpetitt/changelog-file-generator.git"
   },
   "bugs": {
-    "url": "https://github.com/danpetitt/changelog-generator/issues"
+    "url": "https://github.com/danpetitt/changelog-file-generator/issues"
   },
   "keywords": [
     "actions",

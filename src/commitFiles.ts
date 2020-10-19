@@ -12,11 +12,11 @@ export async function commitFiles(files: string[]): Promise<void> {
     event = eventPath && require(eventPath),
     isPR = process.env.GITHUB_EVENT_NAME?.includes('pull_request'),
     defaultBranch = isPR
-      ? event?.pull_request?.head?.ref as string
-      : process.env.GITHUB_REF?.substring(11) 
-    
-  const branch = defaultBranch || ''
-  if (isPR) info(`> Running for a PR, the action will use '${branch}' as ref.`)
+      ? (event?.pull_request?.head?.ref as string)
+      : process.env.GITHUB_REF?.substring(11);
+
+  const branch = defaultBranch || '';
+  if (isPR) info(`> Running for a PR, the action will use '${branch}' as ref.`);
 
   let commitMessage = getInput('commit_message', { required: false });
   if (commitMessage.length === 0)
@@ -35,7 +35,7 @@ export async function commitFiles(files: string[]): Promise<void> {
 
     info('Creating commit...');
     await git.commit(commitMessage, undefined, {}, log);
-  
+
     await git.fetch(['--tags', '--force'], log);
 
     info('> Switching/creating branch...');
@@ -44,18 +44,21 @@ export async function commitFiles(files: string[]): Promise<void> {
       .catch(() => git.checkoutLocalBranch(branch, log));
 
     info('> Pulling from remote...');
-    await git
-      .fetch(undefined, log)
-      .pull(undefined, undefined, undefined, log);
+    await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
 
     info('> Re-staging files...');
     await add(files, { ignoreErrors: true });
 
     info('> Creating commit...');
-    await git.commit(commitMessage, undefined, {
-      '--author': `"${name} <${email}>"`,
-      ...({})
-    }, log);
+    await git.commit(
+      commitMessage,
+      undefined,
+      {
+        '--author': `"${name} <${email}>"`,
+        ...{},
+      },
+      log,
+    );
 
     info('> Pushing commit to repo...');
     await git.push('origin', branch, { '--set-upstream': null }, log);

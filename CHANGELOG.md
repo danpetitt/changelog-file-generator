@@ -1,6 +1,6 @@
 # ChangeLog for Auto Changelog Github Action
 
-## Release - 2020-10-19
+## [Release v1.0.2](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.2) - 2020-10-19
 
 ### Bug Fixes
 
