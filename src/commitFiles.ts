@@ -1,4 +1,11 @@
-import { info, warning, error, getInput } from '@actions/core';
+import {
+  info,
+  warning,
+  error,
+  getInput,
+  startGroup,
+  endGroup,
+} from '@actions/core';
 import simpleGit, { Response } from 'simple-git';
 import path from 'path';
 
@@ -7,6 +14,8 @@ const git = simpleGit({ baseDir });
 
 export async function commitFiles(files: string[]): Promise<void> {
   info(`Committing files to Git running in dir ${baseDir}`);
+
+  startGroup('Internal logs');
 
   const eventPath = process.env.GITHUB_EVENT_PATH,
     event = eventPath && require(eventPath),
@@ -47,8 +56,8 @@ export async function commitFiles(files: string[]): Promise<void> {
       .checkout(branch, undefined, log)
       .catch(() => git.checkoutLocalBranch(branch, log));
 
-    info('> Pulling from remote...');
-    await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
+    // info('> Pulling from remote...');
+    // await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
 
     info('> Re-staging files...');
     await add(files, { ignoreErrors: true });
@@ -67,7 +76,11 @@ export async function commitFiles(files: string[]): Promise<void> {
     info('> Pushing commit to repo...');
     await git.push('origin', branch, { '--set-upstream': null }, log);
 
+    endGroup();
     info('> Task completed.');
+  } else {
+    endGroup();
+    info('> Working tree clean. Nothing to commit.');
   }
 }
 
