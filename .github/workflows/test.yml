@@ -42,13 +42,14 @@ jobs:
       - run: npm ci
       - run: npm run all
       - run: |
+          rm './CHANGELOG.md'
           CURRENT_DATE=$(date +%Y-%m-%d)
           echo ::set-output name=heading::## Release - $CURRENT_DATE
         id: heading_step
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          file: './CHANGELOG.md'
+          file: ./CHANGELOG.md
           section: ${{ steps.heading_step.outputs.heading }}
       - run: cat ./CHANGELOG.md
       - run: cat ./CHANGELOG.md | grep -q '# changelog-file-generator' ; echo $?
@@ -61,16 +62,17 @@ jobs:
       - run: npm ci
       - run: npm run all
       - run: |
-          printf '# ChangeLog for Auto Changelog Github Action\n\nSome sample text before we get to main release notes.\n\n' | tee ./CHANGELOG.md
-      - run: |
           CURRENT_DATE=$(date +%Y-%m-%d)
           echo ::set-output name=heading::## Release - $CURRENT_DATE
+          rm './CHANGELOG.md'
+          printf '# ChangeLog for Auto Changelog Github Action\n\nSome sample text before we get to main release notes.\n\n' | tee './CHANGELOG.md'
         id: heading_step
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          file: './CHANGELOG.md'
+          file: ./CHANGELOG.md
           section: ${{ steps.heading_step.outputs.heading }}
       - run: cat ./CHANGELOG.md
       - run: cat ./CHANGELOG.md | grep -q '# ChangeLog for Auto Changelog Github Action' ; echo $?
+      - run: cat ./CHANGELOG.md | grep -q 'Some sample text before we get to main release notes' ; echo $?
       - run: cat ./CHANGELOG.md | grep -q '## Release - ' ; echo $?
