@@ -49,33 +49,6 @@ export async function commitFiles(files: string[]): Promise<void> {
     info('Creating commit...');
     await git.commit(commitMessage, undefined, {}, log);
 
-    await git.fetch(['--tags', '--force'], log);
-
-    info('> Switching/creating branch...');
-    await git
-      .checkout(branch, undefined, log)
-      .catch(() => git.checkoutLocalBranch(branch, log));
-
-    // info('> Pulling from remote...');
-    // await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
-
-    info('> Re-staging files...');
-    await add(files, { ignoreErrors: true });
-
-    info('> Creating commit...');
-    await git.commit(
-      commitMessage,
-      undefined,
-      {
-        '--author': `"${name} <${email}>"`,
-        ...{},
-      },
-      log,
-    );
-
-    info('> Pushing commit to repo...');
-    await git.push('origin', branch, { '--set-upstream': null }, log);
-
     endGroup();
     info('> Task completed.');
   } else {

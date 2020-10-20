@@ -1,4 +1,11 @@
-# ChangeLog for Auto Changelog Github Action
+# Changelog File Generator Github Action
+
+## [Release refs/tags/v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/refs/tags/v1.0.5) (2020-10-19)
+
+### Bug Fixes
+
+* **Committing:**
+  * More changes made ([61ea95e2](https://github.com/danpetitt/changelog-file-generator/commit/61ea95e29693a568790da081170b000b4a11a431))
 
 ## [Release v1.0.4](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.4) - 2020-10-19
 
