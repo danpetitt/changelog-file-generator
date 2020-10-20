@@ -31,12 +31,10 @@ export async function commitFiles(files: string[]): Promise<void> {
     info(`> Running on branch '${branch}'`);
   }
 
-  let commitMessage = getInput('commit_message', { required: false });
-  if (commitMessage.length === 0)
-    commitMessage = 'chore(pipeline updates): [skip ci]';
+  const commitMessage = 'chore(pipeline updates): [skip ci]';
 
-  const name = getInput('author_name', { required: true }).trim();
-  const email = getInput('author_email', { required: true }).trim();
+  const name = 'GitHub CI';
+  const email = 'actions@github.com';
   await configGit(name, email);
 
   await add(files);

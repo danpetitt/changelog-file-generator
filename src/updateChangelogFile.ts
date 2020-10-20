@@ -1,4 +1,5 @@
 import { info, getInput } from '@actions/core';
+import { context } from '@actions/github';
 import * as fs from 'fs';
 
 export async function updateChangelogFile(
@@ -7,8 +8,7 @@ export async function updateChangelogFile(
 ): Promise<void> {
   info(`Updating changelog file at ${changeLogPath}`);
 
-  let title = getInput('title', { required: false }).trim();
-  if (title.length === 0) title = '# Changelog';
+  const title = `# ${context.repo.repo}`;
 
   let section = getInput('section', { required: false });
   if (section.length === 0) section = `## Release ${process.env.GITHUB_REF}`;
@@ -39,17 +39,24 @@ function createNewContent(
 ): string {
   let updatedContent = '';
   if (existingContent.length === 0) {
-    updatedContent = `${title}\n\n${addNewReleaseSection(newContent, section)}`;
+    updatedContent = `${title}\n\n${addNewReleaseSection(section, newContent)}`;
   } else {
-    // Remove original heading so we can add our new section then add it back
-    const strippedContent = existingContent
-      .trim()
-      .replace(/^# .*?\n+/g, '')
-      .trim();
+    const releaseSection = addNewReleaseSection(section, newContent);
 
-    const releaseSection = addNewReleaseSection(newContent, section);
-    updatedContent = `${title}\n\n${releaseSection}${strippedContent}`;
+    // Find last release heading which will be a level 2 head
+    const lastReleaseIndex = existingContent.indexOf('\n## ');
+    if (lastReleaseIndex === -1) {
+      // Should never get here really, but if we do append the new changelog to the end
+      updatedContent = `${existingContent}\n\n${releaseSection}`;
+    } else {
+      updatedContent = `${existingContent
+        .substr(0, lastReleaseIndex)
+        .trim()}\n\n${releaseSection}${existingContent
+        .substr(lastReleaseIndex)
+        .trim()}`;
+    }
   }
+
   return updatedContent.trim();
 }
 
