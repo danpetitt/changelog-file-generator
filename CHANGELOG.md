@@ -1,6 +1,6 @@
 # Changelog File Generator Github Action
 
-## [Release v1.0.6](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.6) (2020-10-19)
+## [Release v1.0.6](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.6) (2020-10-20)
 
 ### Bug Fixes
 
@@ -9,7 +9,7 @@
 * **Release:**
   * Adjusted release pipeline ([fa8ebfb8](https://github.com/danpetitt/changelog-file-generator/commit/fa8ebfb8cef066ca9d47f159fec12d42ba995ae9))
 
-## [Release v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.5) (2020-10-19)
+## [Release v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.5) (2020-10-20)
 
 ### Bug Fixes
 

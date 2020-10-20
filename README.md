@@ -54,6 +54,10 @@ If `file` set, specifies the tagged markdown text to use for each release sectio
 
 Commits any files, like the updated changelog file, to the repo on completion (comma separated). Does not commit anything by default.
 
+#### `branch`
+
+Specify which branch to commit files into (default `main`).
+
 ### Outputs
 
 #### `changelog`
@@ -63,11 +67,12 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v1.0.7
+uses: danpetitt/changelog-file-generator@v1.1.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
   section: '## Release: {{ GITHUB_REF }}'
   files_to_commit: './CHANGELOG.md'
+  branch: main
 ```

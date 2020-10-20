@@ -24,6 +24,10 @@ inputs:
     description: 'Specify which files you would like to automatically commit once changed (comma separated); this allows you to also commit any files with updated version numbers'
     required: false
     default: ''
+  branch:
+    description: 'Specify which branch to commit files into (default main)'
+    required: false
+    default: 'main'
 
 outputs:
   changelog:

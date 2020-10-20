@@ -18,7 +18,7 @@ export async function commitFiles(files: string[]): Promise<void> {
   );
 
   startGroup('Internal logs');
-  const branch = (await git.branchLocal()).all.pop() || '';
+  const branch = getInput('branch') || 'main';
   info(`> Default branch '${branch}'`);
 
   const commitMessage = 'chore(pipeline updates): [skip ci]';
