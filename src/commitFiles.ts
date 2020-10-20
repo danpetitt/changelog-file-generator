@@ -13,23 +13,13 @@ const baseDir = path.join(process.cwd(), getInput('cwd') || '');
 const git = simpleGit({ baseDir });
 
 export async function commitFiles(files: string[]): Promise<void> {
-  info(`Committing files to Git running in dir ${baseDir}`);
+  info(
+    `Committing files to Git running in dir ${baseDir} for ref ${process.env.GITHUB_REF}`,
+  );
 
   startGroup('Internal logs');
-
-  const eventPath = process.env.GITHUB_EVENT_PATH,
-    event = eventPath && require(eventPath),
-    isPR = process.env.GITHUB_EVENT_NAME?.includes('pull_request'),
-    defaultBranch = isPR
-      ? (event?.pull_request?.head?.ref as string)
-      : process.env.GITHUB_REF?.substring(11);
-
-  const branch = defaultBranch || '';
-  if (isPR) {
-    info(`> Running for a PR, the action will use '${branch}' as ref.`);
-  } else {
-    info(`> Running on branch '${branch}'`);
-  }
+  const branch = (await git.branchLocal()).all.pop() || '';
+  info(`> Default branch '${branch}'`);
 
   const commitMessage = 'chore(pipeline updates): [skip ci]';
 
@@ -44,8 +34,22 @@ export async function commitFiles(files: string[]): Promise<void> {
   if (changedFiles > 0) {
     info(`> Found ${changedFiles} changed files`);
 
+    info('> Switching/creating branch...');
+    await git
+      .checkout(branch, undefined, log)
+      .catch(() => git.checkoutLocalBranch(branch, log));
+
+    info('> Pulling from remote...');
+    await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
+
+    info('> Re-staging files...');
+    await add(files, { ignoreErrors: true });
+
     info('Creating commit...');
     await git.commit(commitMessage, undefined, {}, log);
+
+    info('> Pushing commit to repo...');
+    await git.push('origin', branch, { '--set-upstream': null }, log);
 
     endGroup();
     info('> Task completed.');

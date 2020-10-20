@@ -1,6 +1,15 @@
 # Changelog File Generator Github Action
 
-## [Release refs/tags/v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/refs/tags/v1.0.5) (2020-10-19)
+## [Release v1.0.6](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.6) (2020-10-19)
+
+### Bug Fixes
+
+* **Compilation:**
+  * Disabled incremental build ([33a4e404](https://github.com/danpetitt/changelog-file-generator/commit/33a4e40495facc402cbd715c2d6c1da9a7a12392))
+* **Release:**
+  * Adjusted release pipeline ([fa8ebfb8](https://github.com/danpetitt/changelog-file-generator/commit/fa8ebfb8cef066ca9d47f159fec12d42ba995ae9))
+
+## [Release v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.5) (2020-10-19)
 
 ### Bug Fixes
 
