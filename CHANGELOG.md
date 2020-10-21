@@ -1,5 +1,13 @@
 # Changelog for File Generator Github Action
 
+## [Release v1.1.2](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.2) (2020-10-21)
+
+### Bug Fixes
+
+* **Sections:**
+  * Corrected mistake in section output ([57134eb2](https://github.com/danpetitt/changelog-file-generator/commit/57134eb2cd18bedf65cb9012aff7d6169b018e3e))
+
+
 ## [Release v1.1.1](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.1) (2020-10-21)
 
 ### Bug Fixes
