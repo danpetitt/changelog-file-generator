@@ -1,5 +1,13 @@
 # Changelog for File Generator Github Action
 
+## [Release v1.1.3](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.3) (2020-10-21)
+
+### Bug Fixes
+
+* **Config:**
+  * Moved git config to start of operations ([5dc08219](https://github.com/danpetitt/changelog-file-generator/commit/5dc082194d0d51780c129ae035be495a7115dc8a))
+
+
 ## [Release v1.1.2](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.2) (2020-10-21)
 
 ### Bug Fixes
