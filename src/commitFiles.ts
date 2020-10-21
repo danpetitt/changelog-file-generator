@@ -21,7 +21,7 @@ export async function commitFiles(files: string[]): Promise<void> {
   const branch = getInput('branch') || 'main';
   info(`> Default branch '${branch}'`);
 
-  const commitMessage = 'chore(pipeline updates): [skip ci]';
+  const commitMessage = 'ci(pipeline updates): [skip ci]';
   const name = 'GitHub CI';
   const email = 'actions@github.com';
 
@@ -69,7 +69,8 @@ async function configGit(name: string, email: string): Promise<void> {
   await git
     .addConfig('user.email', email, undefined, log)
     .addConfig('user.name', name, undefined, log)
-    .addConfig('pull.rebase', 'false', undefined, log);
+    .addConfig('pull.rebase', 'false', undefined, log)
+    .addConfig('core.autocrlf', 'false', undefined, log);
 
   info(
     'Current git config\n' +

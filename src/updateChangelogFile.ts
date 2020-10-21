@@ -52,17 +52,18 @@ function createNewContent(
       // as its probably empty
       updatedContent = `${existingContent}\n\n${releaseSection}`;
     } else {
-      updatedContent = `${existingContent
-        .substr(0, lastReleaseIndex)
-        .trim()}\n\n${releaseSection}${existingContent
-        .substr(lastReleaseIndex)
-        .trim()}`;
+      // Set first part up to last release
+      updatedContent = existingContent.substr(0, lastReleaseIndex).trim();
+      // Add our new release
+      updatedContent += `\n\n${releaseSection}`;
+      // Add the remaining previous releases
+      updatedContent += existingContent.substr(lastReleaseIndex).trim();
     }
   }
 
   return updatedContent.trim();
 }
 
-function addNewReleaseSection(content: string, section: string): string {
+function addNewReleaseSection(section: string, content: string): string {
   return `${section}\n\n${content}\n\n`;
 }

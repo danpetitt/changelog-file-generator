@@ -1,4 +1,6 @@
-# Changelog File Generator Github Action
+# Changelog for File Generator Github Action
+
+## [Release v1.1.1](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.1) (2020-10-21)
 
 ### Bug Fixes
 
@@ -7,8 +9,6 @@
 * **Git version:**
   * Lowered version due to issues ([448b721d](https://github.com/danpetitt/changelog-file-generator/commit/448b721d3cfff9acc8e6d9faa257cf8df803d1aa))
 
-
-## [Release v1.1.1](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.1) (2020-10-21)
 
 ## [Release v1.0.6](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.6) (2020-10-20)
 
@@ -19,12 +19,14 @@
 * **Release:**
   * Adjusted release pipeline ([fa8ebfb8](https://github.com/danpetitt/changelog-file-generator/commit/fa8ebfb8cef066ca9d47f159fec12d42ba995ae9))
 
+
 ## [Release v1.0.5](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.5) (2020-10-20)
 
 ### Bug Fixes
 
 * **Committing:**
   * More changes made ([61ea95e2](https://github.com/danpetitt/changelog-file-generator/commit/61ea95e29693a568790da081170b000b4a11a431))
+
 
 ## [Release v1.0.4](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.4) - 2020-10-19
 
@@ -42,13 +44,15 @@
   * [skip ci] ([d8552395](https://github.com/danpetitt/changelog-file-generator/commit/d855239548a52517e4489efee6dfeef7624d0f5c))
   * [skip ci] ([608ee8be](https://github.com/danpetitt/changelog-file-generator/commit/608ee8beea0f80e0cc49361b62a55f1168c2a9e2))
 
+
 ## [Release v1.0.3](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.3) - 2020-10-19
 
 ### Bug Fixes
 
 * **Commit:**
   * Resolve commit issues ([897c2cf6](https://github.com/danpetitt/changelog-file-generator/commit/897c2cf69a564d3a5f01e805690587a0253d98c1))
-  
+
+
 ## [Release v1.0.2](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.2) - 2020-10-19
 
 ### Bug Fixes

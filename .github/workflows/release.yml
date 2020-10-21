@@ -26,6 +26,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           file: './CHANGELOG.md'
+          exclude: chore,ci
           section: ${{ steps.release_heading.outputs.heading }}
           files_to_commit: './CHANGELOG.md'
 
