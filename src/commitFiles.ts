@@ -39,8 +39,11 @@ export async function commitFiles(files: string[]): Promise<void> {
       .checkout(branch, undefined, log)
       .catch(() => git.checkoutLocalBranch(branch, log));
 
+    info('> Fetch from remote...');
+    await git.fetch(undefined, log);
+
     info('> Pulling from remote...');
-    await git.fetch(undefined, log).pull(undefined, undefined, undefined, log);
+    await git.pull(undefined, undefined, undefined, log);
 
     info('> Re-staging files...');
     await add(files, { ignoreErrors: true });
