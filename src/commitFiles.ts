@@ -22,10 +22,8 @@ export async function commitFiles(files: string[]): Promise<void> {
   info(`> Default branch '${branch}'`);
 
   const commitMessage = 'chore(pipeline updates): [skip ci]';
-
   const name = 'GitHub CI';
   const email = 'actions@github.com';
-  await configGit(name, email);
 
   await add(files);
 
@@ -34,10 +32,15 @@ export async function commitFiles(files: string[]): Promise<void> {
   if (changedFiles > 0) {
     info(`> Found ${changedFiles} changed files`);
 
-    info('> Switching/creating branch...');
-    await git
-      .checkout(branch, undefined, log)
-      .catch(() => git.checkoutLocalBranch(branch, log));
+    await configGit(name, email);
+
+    await git.fetch(['--tags', '--force'], log);
+
+    info(`> Switching/creating branch '${branch}'...`);
+    await git.checkout(branch, undefined, log).catch(async () => {
+      info(`> Switching/creating local branch '${branch}'...`);
+      await git.checkoutLocalBranch(branch, log);
+    });
 
     info('> Fetch from remote...');
     await git.fetch(undefined, log);
@@ -65,7 +68,8 @@ export async function commitFiles(files: string[]): Promise<void> {
 async function configGit(name: string, email: string): Promise<void> {
   await git
     .addConfig('user.email', email, undefined, log)
-    .addConfig('user.name', name, undefined, log);
+    .addConfig('user.name', name, undefined, log)
+    .addConfig('pull.rebase', 'false', undefined, log);
 
   info(
     'Current git config\n' +
