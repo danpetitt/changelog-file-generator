@@ -24,6 +24,7 @@ export async function commitFiles(files: string[]): Promise<void> {
   const commitMessage = 'ci(pipeline updates): [skip ci]';
   const name = 'GitHub CI';
   const email = 'actions@github.com';
+  await configGit(name, email);
 
   await add(files);
 
@@ -31,8 +32,6 @@ export async function commitFiles(files: string[]): Promise<void> {
   const changedFiles = (await git.diffSummary(['--cached'])).files.length;
   if (changedFiles > 0) {
     info(`> Found ${changedFiles} changed files`);
-
-    await configGit(name, email);
 
     await git.fetch(['--tags', '--force'], log);
 

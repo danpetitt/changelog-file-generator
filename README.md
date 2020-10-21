@@ -67,7 +67,7 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v1.1.2
+uses: danpetitt/changelog-file-generator@v1.1.3
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
   exclude: 'perf,other,breaking'
