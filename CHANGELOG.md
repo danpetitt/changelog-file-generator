@@ -1,5 +1,15 @@
 # Changelog File Generator Github Action
 
+### Bug Fixes
+
+* **Git:**
+  * Modified order of git commands ([b0a0a5b0](https://github.com/danpetitt/changelog-file-generator/commit/b0a0a5b009f167519bc6110a9c59425b64865dff))
+* **Git version:**
+  * Lowered version due to issues ([448b721d](https://github.com/danpetitt/changelog-file-generator/commit/448b721d3cfff9acc8e6d9faa257cf8df803d1aa))
+
+
+## [Release v1.1.1](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.1) (2020-10-21)
+
 ## [Release v1.0.6](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.0.6) (2020-10-20)
 
 ### Bug Fixes
