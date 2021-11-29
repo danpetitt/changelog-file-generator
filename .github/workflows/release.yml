@@ -17,17 +17,16 @@ jobs:
       - run: npm run all
       - run: |
           RELEASE=$(echo $TAGREF| cut -d'/' -f 3)
-          CURRENT_DATE=$(date +%Y-%m-%d)
-          echo ::set-output name=heading::## [Release $RELEASE]\(https://github.com/danpetitt/changelog-file-generator/releases/tag/$RELEASE\) \($CURRENT_DATE\)
-        id: release_heading
+          echo ::set-output name=version::$RELEASE
+        id: release_version
 
-      - id: changelog
-        uses: danpetitt/changelog-generator@main
+      - uses: danpetitt/changelog-generator@main
+        id: changelog
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           file: './CHANGELOG.md'
           exclude: chore,ci
-          section: ${{ steps.release_heading.outputs.heading }}
+          release_version: ${{ steps.release_version.outputs.version }}
           files_to_commit: './CHANGELOG.md'
 
       - name: Create Release

@@ -9,6 +9,9 @@ inputs:
   token:
     description: 'Github token'
     required: true
+  release_version:
+    description: 'Specify the current version to be released without any prefix'
+    required: true
   exclude:
     description: 'Exclude selected commit types (comma separated)'
     required: false
@@ -16,14 +19,14 @@ inputs:
   file:
     description: 'Specify the path of a change log file for creating or updating; omit to not update any file'
     required: false
-  section:
-    description: 'Specify the tagged markdown text to use for each release section'
-    required: false
-    default: '## Release {{ GITHUB_REF }}'
   files_to_commit:
     description: 'Specify which files you would like to automatically commit once changed (comma separated); this allows you to also commit any files with updated version numbers'
     required: false
     default: ''
+  user:
+    description: 'User email attributed to the committed files (default actions@github.com)'
+    required: false
+    default: 'actions@github.com'
   branch:
     description: 'Specify which branch to commit files into (default main)'
     required: false

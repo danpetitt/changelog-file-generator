@@ -23,6 +23,7 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          release_version: 1.1.4
 
   test-with-exclude: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
@@ -33,6 +34,7 @@ jobs:
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          release_version: 1.1.4
           exclude: 'chore,ci,build'
 
   test-generating-new-changelog-file:
@@ -44,16 +46,16 @@ jobs:
       - run: |
           rm './CHANGELOG.md'
           CURRENT_DATE=$(date +%Y-%m-%d)
-          echo ::set-output name=heading::## Release - $CURRENT_DATE
+          echo ::set-output name=expected_heading::## \\[Release v1.1.4\\]\(https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.4\) \($CURRENT_DATE\)
         id: heading_step
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           file: ./CHANGELOG.md
-          section: ${{ steps.heading_step.outputs.heading }}
+          release_version: 1.1.4
       - run: cat ./CHANGELOG.md
       - run: cat ./CHANGELOG.md | grep -q '# changelog-file-generator' ; echo $?
-      - run: cat ./CHANGELOG.md | grep -q '## Release - ' ; echo $?
+      - run: cat ./CHANGELOG.md | grep -q '${{ steps.heading_step.outputs.expected_heading }}' ; echo $?
 
   test-updating-existing-changelog-file:
     runs-on: ubuntu-latest
@@ -62,17 +64,17 @@ jobs:
       - run: npm ci
       - run: npm run all
       - run: |
-          CURRENT_DATE=$(date +%Y-%m-%d)
-          echo ::set-output name=heading::## Release - $CURRENT_DATE
           rm './CHANGELOG.md'
           printf '# ChangeLog for Auto Changelog Github Action\n\nSome sample text before we get to main release notes.\n\n' | tee './CHANGELOG.md'
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          echo ::set-output name=expected_heading::## \\[Release v1.1.4\\]\(https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.4\) \($CURRENT_DATE\)
         id: heading_step
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          release_version: 1.1.4
           file: ./CHANGELOG.md
-          section: ${{ steps.heading_step.outputs.heading }}
       - run: cat ./CHANGELOG.md
       - run: cat ./CHANGELOG.md | grep -q '# ChangeLog for Auto Changelog Github Action' ; echo $?
       - run: cat ./CHANGELOG.md | grep -q 'Some sample text before we get to main release notes' ; echo $?
-      - run: cat ./CHANGELOG.md | grep -q '## Release - ' ; echo $?
+      - run: cat ./CHANGELOG.md | grep -q '${{ steps.heading_step.outputs.expected_heading }}' ; echo $?

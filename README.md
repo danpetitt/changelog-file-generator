@@ -38,6 +38,10 @@ The `flag` is optional (if provided, it must be surrounded in square brackets). 
 
 **Required** Github token.
 
+#### `release_version`
+
+**Required** Specify the current version to be released without any prefix like `v`
+
 #### `exclude`
 
 Exclude selected commit types (comma separated).
@@ -46,17 +50,17 @@ Exclude selected commit types (comma separated).
 
 Specify a file path to generate or update a change log file.
 
-#### `section`
-
-If `file` set, specifies the tagged markdown text to use for each release section (default `## Release <currentdate>`)
-
 #### `files_to_commit`
 
 Commits any files, like the updated changelog file, to the repo on completion (comma separated). Does not commit anything by default.
 
+#### `user`
+
+Optional user email attributed to the committed files (default `actions@github.com`).
+
 #### `branch`
 
-Specify which branch to commit files into (default `main`).
+Optional branch to commit files into (default `main`).
 
 ### Outputs
 
@@ -67,12 +71,12 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v1.1.3
+uses: danpetitt/changelog-file-generator@v2.0.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
+  release_version: '2.0.0'
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
-  section: '## Release: {{ GITHUB_REF }}'
   files_to_commit: './CHANGELOG.md'
   branch: main
 ```
