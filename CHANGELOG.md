@@ -1,6 +1,6 @@
 # Changelog for File Generator Github Action
 
-## [Release vv2.0.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/vv2.0.0) (2021-11-29)
+## [Release v2.0.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.0.0) (2021-11-29)
 
 ### Other Changes
 
