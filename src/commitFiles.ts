@@ -18,12 +18,33 @@ export async function commitFiles(files: string[]): Promise<void> {
   );
 
   startGroup('Internal logs');
+
+  const GIT_TOKENS = {
+    GIT_CREDENTIALS: undefined,
+    GH_TOKEN: undefined,
+    // GitHub Actions require the "x-access-token:" prefix for git access
+    // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
+    GITHUB_TOKEN: !process.env.GITHUB_ACTION ? undefined : 'x-access-token:',
+    GL_TOKEN: 'gitlab-ci-token:',
+    GITLAB_TOKEN: 'gitlab-ci-token:',
+    BB_TOKEN: 'x-token-auth:',
+    BITBUCKET_TOKEN: 'x-token-auth:',
+    BB_TOKEN_BASIC_AUTH: '',
+    BITBUCKET_TOKEN_BASIC_AUTH: '',
+  };
+
+  const envVars = Object.keys(GIT_TOKENS).filter(
+    (envVar) => process.env[envVar],
+  );
+
   const branch = getInput('branch') || 'main';
   info(`> Default branch '${branch}'`);
 
   const commitMessage = 'ci(pipeline updates): [skip ci]';
-  const name = 'GitHub CI';
-  const email = 'actions@github.com';
+
+  const useremail = getInput('user', { required: false });
+  const name = useremail ?? 'GitHub CI';
+  const email = useremail ?? 'actions@github.com';
   await configGit(name, email);
 
   await add(files);
@@ -53,6 +74,14 @@ export async function commitFiles(files: string[]): Promise<void> {
     info('Creating commit...');
     await git.commit(commitMessage, undefined, {}, log);
 
+    info('> Setting process env vars...');
+    for (const envName of envVars) {
+      info('> Setting process env vars...');
+      const envValue = process.env[envName];
+      if (envValue) {
+        git.env(envName, envValue);
+      }
+    }
     info('> Pushing commit to repo...');
     await git.push('origin', branch, { '--set-upstream': null }, log);
 

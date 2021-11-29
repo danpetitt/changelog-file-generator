@@ -45,7 +45,7 @@ async function run() {
       await commitFiles(files.split(','));
     }
   } catch (error) {
-    setFailed(error.message);
+    setFailed((error as Error)?.message);
   }
 }
 

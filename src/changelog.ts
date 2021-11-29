@@ -29,7 +29,7 @@ export async function generate(
 
       let [, type, category, title, flag] = COMMIT_REGEX.exec(message) || [];
 
-      if (!title) continue;
+      if (!title || title.includes('Merge branch')) continue;
 
       type = trim(type);
       type =

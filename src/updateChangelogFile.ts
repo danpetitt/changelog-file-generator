@@ -10,7 +10,10 @@ export async function updateChangelogFile(
 
   const title = `# ${context.repo.repo}`;
 
-  let section = getInput('section', { required: false });
+  const releaseVersion = getInput('release_version', { required: true });
+  const commitDate = new Date().toISOString().substr(0, 10);
+
+  let section = `## [Release v${releaseVersion}](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/v${releaseVersion}) (${commitDate})`;
   if (section.length === 0) section = `## Release ${process.env.GITHUB_REF}`;
 
   let existingContent = '';
@@ -36,14 +39,14 @@ function createNewContent(
   title: string,
   section: string,
 ): string {
+  const releaseSection = addNewReleaseSection(section, newContent);
+
   let updatedContent = '';
   if (existingContent.length === 0) {
     info(`Creating new changelog with title '${title}'`);
-    updatedContent = `${title}\n\n${addNewReleaseSection(section, newContent)}`;
+    updatedContent = `${title}\n\n${releaseSection}`;
   } else {
     info('Updating existing changelog');
-
-    const releaseSection = addNewReleaseSection(section, newContent);
 
     // Find last release heading which will be a level 2 head
     const lastReleaseIndex = existingContent.indexOf('\n## ');
