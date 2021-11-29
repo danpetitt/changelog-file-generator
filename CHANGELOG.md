@@ -1,5 +1,13 @@
 # Changelog for File Generator Github Action
 
+## [Release vv2.0.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/vv2.0.0) (2021-11-29)
+
+### Other Changes
+
+* **Parameters:**
+  * Simplified Usage ([15e0c66a](https://github.com/danpetitt/changelog-file-generator/commit/15e0c66a2bc0ed6eebd4c56def0323f8757e3e97)) **[breaking]**
+
+
 ## [Release v1.1.3](https://github.com/danpetitt/changelog-file-generator/releases/tag/v1.1.3) (2020-10-21)
 
 ### Bug Fixes
