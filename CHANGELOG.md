@@ -1,5 +1,23 @@
 # Changelog for File Generator Github Action
 
+## [Release v2.1.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.1.0) (2021-12-01)
+
+### Bug Fixes
+
+* **Release Version:**
+  * Removed auto-adding of prefix ([43b51a41](https://github.com/danpetitt/changelog-file-generator/commit/43b51a41d18a061443a8e01895331c54456033d8))
+
+### New Features
+
+* **GitHub:**
+  * Refactored to use GitHub natively ([be06ec58](https://github.com/danpetitt/changelog-file-generator/commit/be06ec582963f93e28150d0aa9b52b386ce55e90))
+
+### Other Changes
+
+* **GitHub:**
+  * Refactored to use GitHub natively ([32b950cb](https://github.com/danpetitt/changelog-file-generator/commit/32b950cb7d309f330aa520133b5f68904c361c33))
+
+
 ## [Release v2.0.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.0.0) (2021-11-29)
 
 ### Other Changes
