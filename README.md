@@ -58,9 +58,13 @@ Commits any files, like the updated changelog file, to the repo on completion (c
 
 Optional user email attributed to the committed files (default `actions@github.com`).
 
+#### `userName`
+
+Optional user name attributed to the committed files (default `Octokit Bot`).
+
 #### `branch`
 
-Optional branch to commit files into (default `main`).
+Optional branch to commit files into (default `repo's default-branch`).
 
 ### Outputs
 
@@ -71,12 +75,14 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v2.0.0
+uses: danpetitt/changelog-file-generator@v2.1.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
-  release_version: '2.0.0'
+  release_version: '2.1.0'
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
-  files_to_commit: './CHANGELOG.md'
+  files_to_commit: './CHANGELOG.md',./coverage-badge-branch.svg
   branch: main
+  user: 'user@user.com'
+  userName: 'A User'
 ```

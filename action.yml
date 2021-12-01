@@ -24,13 +24,16 @@ inputs:
     required: false
     default: ''
   user:
-    description: 'User email attributed to the committed files (default actions@github.com)'
+    description: 'User email attributed to the committed files (default: actions@github.com)'
     required: false
     default: 'actions@github.com'
-  branch:
-    description: 'Specify which branch to commit files into (default main)'
+  userName:
+    description: 'User name attributed to the committed files (default: Octokit Bot)'
     required: false
-    default: 'main'
+    default: 'Octokit Bot'
+  branch:
+    description: 'Specify which branch to commit files into (default: repos default-branch)'
+    required: false
 
 outputs:
   changelog:
