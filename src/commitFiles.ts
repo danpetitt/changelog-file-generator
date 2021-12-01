@@ -1,138 +1,74 @@
-import {
-  info,
-  warning,
-  error,
-  getInput,
-  startGroup,
-  endGroup,
-} from '@actions/core';
-import simpleGit, { Response } from 'simple-git';
+import fs from 'fs';
 import path from 'path';
+import { info, getInput, startGroup, endGroup } from '@actions/core';
+import { context, GitHub } from '@actions/github/lib/utils';
+import { Octokit } from '@octokit/core';
 
 const baseDir = path.join(process.cwd(), getInput('cwd') || '');
-const git = simpleGit({ baseDir });
 
-export async function commitFiles(files: string[]): Promise<void> {
+export async function commitFiles(
+  octokit: InstanceType<typeof GitHub>,
+  files: string[],
+): Promise<void> {
   info(
     `Committing files to Git running in dir ${baseDir} for ref ${process.env.GITHUB_REF}`,
   );
 
+  const OctokitPlugin = Octokit.plugin(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('octokit-commit-multiple-files'),
+  );
+
+  const octokitPlugin = new OctokitPlugin({ auth: octokit.auth });
+
   startGroup('Internal logs');
 
-  const GIT_TOKENS = {
-    GIT_CREDENTIALS: undefined,
-    GH_TOKEN: undefined,
-    // GitHub Actions require the "x-access-token:" prefix for git access
-    // https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/#http-based-git-access-by-an-installation
-    GITHUB_TOKEN: !process.env.GITHUB_ACTION ? undefined : 'x-access-token:',
-    GL_TOKEN: 'gitlab-ci-token:',
-    GITLAB_TOKEN: 'gitlab-ci-token:',
-    BB_TOKEN: 'x-token-auth:',
-    BITBUCKET_TOKEN: 'x-token-auth:',
-    BB_TOKEN_BASIC_AUTH: '',
-    BITBUCKET_TOKEN_BASIC_AUTH: '',
-  };
-
-  const envVars = Object.keys(GIT_TOKENS).filter(
-    (envVar) => process.env[envVar],
-  );
-
-  const branch = getInput('branch') || 'main';
-  info(`> Default branch '${branch}'`);
+  const branch = getInput('branch') || undefined;
+  info(`> Branch '${branch ?? 'default branch'}'`);
 
   const commitMessage = 'ci(pipeline updates): [skip ci]';
+  const useremail =
+    getInput('user', { required: false }) || 'actions@github.com';
+  const username = getInput('userName', { required: false }) || 'Octokit Bot';
+  info(`> Committer email '${useremail}'`);
+  info(`> Committer name '${username}'`);
 
-  const useremail = getInput('user', { required: false });
-  const name = useremail ?? 'GitHub CI';
-  const email = useremail ?? 'actions@github.com';
-  await configGit(name, email);
+  const {
+    repo: { owner, repo },
+  } = context;
 
-  await add(files);
-
-  info('Checking for changes...');
-  const changedFiles = (await git.diffSummary(['--cached'])).files.length;
-  if (changedFiles > 0) {
-    info(`> Found ${changedFiles} changed files`);
-
-    await git.fetch(['--tags', '--force'], log);
-
-    info(`> Switching/creating branch '${branch}'...`);
-    await git.checkout(branch, undefined, log).catch(async () => {
-      info(`> Switching/creating local branch '${branch}'...`);
-      await git.checkoutLocalBranch(branch, log);
-    });
-
-    info('> Fetch from remote...');
-    await git.fetch(undefined, log);
-
-    info('> Pulling from remote...');
-    await git.pull(undefined, undefined, undefined, log);
-
-    info('> Re-staging files...');
-    await add(files, { ignoreErrors: true });
-
-    info('Creating commit...');
-    await git.commit(commitMessage, undefined, {}, log);
-
-    info('> Setting process env vars...');
-    for (const envName of envVars) {
-      info('> Setting process env vars...');
-      const envValue = process.env[envName];
-      if (envValue) {
-        git.env(envName, envValue);
-      }
-    }
-    info('> Pushing commit to repo...');
-    await git.push('origin', branch, { '--set-upstream': null }, log);
-
-    endGroup();
-    info('> Task completed.');
-  } else {
-    endGroup();
-    info('> Working tree clean. Nothing to commit.');
+  interface FileChanges {
+    [key: string]: string;
   }
-}
 
-async function configGit(name: string, email: string): Promise<void> {
-  await git
-    .addConfig('user.email', email, undefined, log)
-    .addConfig('user.name', name, undefined, log)
-    .addConfig('pull.rebase', 'false', undefined, log)
-    .addConfig('core.autocrlf', 'false', undefined, log);
+  const fileInfo: FileChanges = {};
+  for (const file of files) {
+    info(`> Adding file '${file}'`);
+    const content = fs.readFileSync(file, 'utf-8');
+    fileInfo[file] = content;
+  }
 
-  info(
-    'Current git config\n' +
-      JSON.stringify((await git.listConfig()).all, null, 2),
-  );
-}
+  info('> Committing changes');
+  await octokitPlugin.repos.createOrUpdateFiles({
+    owner,
+    repo,
+    branch,
+    createBranch: false,
+    changes: [
+      {
+        message: commitMessage,
+        files: fileInfo,
+      },
+    ],
+    committer: {
+      name: username,
+      email: useremail,
+    },
+    author: {
+      name: username,
+      email: useremail,
+    },
+  });
 
-async function add(
-  files: string[],
-  { logWarning = true, ignoreErrors = false } = {},
-): Promise<void | Response<void>> {
-  info(`Adding ${files.length} files`);
-
-  return git
-    .add(files, (
-      e: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-      d?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    ) => (ignoreErrors ? null : info(`${e}: ${d ?? ''}`)))
-    .catch((e: Error) => {
-      if (ignoreErrors) return;
-
-      if (
-        e.message.includes('fatal: pathspec') &&
-        e.message.includes('did not match any files')
-      ) {
-        logWarning && warning('Add command did not match any file.');
-      } else {
-        throw e;
-      }
-    });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function log(err: any | Error, data?: any) {
-  if (data) console.log(data);
-  if (err) error(err);
+  endGroup();
 }

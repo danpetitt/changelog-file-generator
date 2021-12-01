@@ -42,7 +42,7 @@ async function run() {
     }
 
     if (files.length) {
-      await commitFiles(files.split(','));
+      await commitFiles(octokit, files.split(','));
     }
   } catch (error) {
     setFailed((error as Error)?.message);
