@@ -13,7 +13,7 @@ export async function updateChangelogFile(
   const releaseVersion = getInput('release_version', { required: true });
   const commitDate = new Date().toISOString().substr(0, 10);
 
-  let section = `## [Release v${releaseVersion}](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/v${releaseVersion}) (${commitDate})`;
+  let section = `## [Release ${releaseVersion}](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/${releaseVersion}) (${commitDate})`;
   if (section.length === 0) section = `## Release ${process.env.GITHUB_REF}`;
 
   let existingContent = '';

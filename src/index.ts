@@ -12,6 +12,7 @@ async function run() {
     const files = getInput('files_to_commit', { required: false });
 
     const octokit = getOctokit(token);
+
     const {
       repo: { owner, repo },
       sha,

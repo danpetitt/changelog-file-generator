@@ -10,7 +10,7 @@ inputs:
     description: 'Github token'
     required: true
   release_version:
-    description: 'Specify the current version to be released without any prefix'
+    description: 'Specify the current version to be released which matches the release/tag (normally with a `v` prefix)'
     required: true
   exclude:
     description: 'Exclude selected commit types (comma separated)'

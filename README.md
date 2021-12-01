@@ -40,7 +40,7 @@ The `flag` is optional (if provided, it must be surrounded in square brackets). 
 
 #### `release_version`
 
-**Required** Specify the current version to be released without any prefix like `v`
+**Required** Specify the current version to be released which matches the release/tag (normally with a `v` prefix)
 
 #### `exclude`
 
@@ -78,7 +78,7 @@ The generated changelog.
 uses: danpetitt/changelog-file-generator@v2.1.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
-  release_version: '2.1.0'
+  release_version: 'v2.1.0'
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
   files_to_commit: './CHANGELOG.md',./coverage-badge-branch.svg

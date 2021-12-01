@@ -20,20 +20,20 @@ jobs:
           echo ::set-output name=version::$RELEASE
         id: release_version
 
-      - uses: danpetitt/changelog-generator@main
+      - uses: danpetitt/changelog-file-generator@main
         id: changelog
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          file: './CHANGELOG.md'
+          token: ${{ github.token }}
+          file: 'CHANGELOG.md'
           exclude: chore,ci
           release_version: ${{ steps.release_version.outputs.version }}
-          files_to_commit: './CHANGELOG.md'
+          files_to_commit: 'CHANGELOG.md'
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
