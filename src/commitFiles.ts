@@ -3,8 +3,6 @@ import path from 'path';
 import { info, getInput, startGroup, endGroup, error } from '@actions/core';
 import { context, GitHub } from '@actions/github/lib/utils';
 import { Octokit } from '@octokit/rest';
-// import { Octokit } from '@octokit/core';
-// import { createTokenAuth } from '@octokit/auth-token';
 
 const baseDir = path.join(process.cwd(), getInput('cwd') || '');
 
@@ -29,14 +27,8 @@ export async function commitFiles(
   );
 
   const token = getInput('token', { required: true });
-  // info('> Creating Octokit Auth Token');
-  // const auth = createTokenAuth(token);
-
-  // info('> Authenticating');
-  // const authentication = await auth();
 
   info('> Creating Octokit Plugin');
-  // const octokitPlugin = new OctokitPlugin({ auth: authentication.token });
   const octokitPlugin = new OctokitPlugin({ auth: `token ${token}` });
 
   let branch = getInput('branch') || undefined;
