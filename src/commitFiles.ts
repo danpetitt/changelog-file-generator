@@ -1,9 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import glob from 'glob';
+import globCB from 'glob';
 import { info, getInput, startGroup, endGroup, error } from '@actions/core';
 import { context, GitHub } from '@actions/github/lib/utils';
 import { Octokit } from '@octokit/rest';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const promisify = require('util').promisify;
+const glob = promisify(globCB);
 
 const baseDir = path.join(process.cwd(), getInput('cwd') || '');
 
@@ -55,40 +59,34 @@ export async function commitFiles(
     [key: string]: string;
   }
 
-  const globOptions: glob.IOptions = {
+  const globOptions: globCB.IOptions = {
     nonull: false,
   };
   const fileInfo: FileChanges = {};
   for (const file of files) {
-    info(`> Adding file '${file}'`);
+    info(`> Checking file '${file}'`);
 
-    glob(file, globOptions, (err, globFiles) => {
-      // globFiles is an array of filenames
-
-      // err is an error object or null.
-      if (err) {
+    // globFiles is an array of filenames
+    // If the `nonull` option is set, and nothing
+    // was found, then files is ["**/*.js"]
+    const globFiles = await glob(file, globOptions)
+      .then((files: string[]) => {
+        return files;
+      })
+      .catch((err: Error) => {
         error(
           `> Failed to commit files because glob pattern failed: ${JSON.stringify(
             err,
           )}`,
         );
         throw new Error('Failed to commit files');
-      }
+      });
 
-      // If the `nonull` option is set, and nothing
-      // was found, then files is ["**/*.js"]
-      for (const globFile of globFiles) {
-        const content = fs.readFileSync(globFile, 'utf-8');
-        fileInfo[file] = content;
-      }
-    });
-
-    if (/\*/.test(file)) {
-      // Glob pattern
+    for (const globFile of globFiles) {
+      info(`> Adding file '${file}'`);
+      const content = fs.readFileSync(globFile, 'utf-8');
+      fileInfo[file] = content;
     }
-
-    const content = fs.readFileSync(file, 'utf-8');
-    fileInfo[file] = content;
   }
 
   const changes = [
