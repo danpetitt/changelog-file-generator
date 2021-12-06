@@ -13,6 +13,19 @@
   * Added glob pattern support ([22cd6d65](https://github.com/danpetitt/changelog-file-generator/commit/22cd6d65388d5b5ab37cab9732583a72c473d23e))
 
 
+## [Release v2.2.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.2.0) (2021-12-06)
+
+### New Features
+
+* **Globs:**
+  * Added glob pattern support ([c6489688](https://github.com/danpetitt/changelog-file-generator/commit/c6489688106cf225159c7bcebf68e97766559844))
+
+### Other Changes
+
+* **Globs:**
+  * Added glob pattern support ([22cd6d65](https://github.com/danpetitt/changelog-file-generator/commit/22cd6d65388d5b5ab37cab9732583a72c473d23e))
+
+
 ## [Release v2.1.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.1.0) (2021-12-01)
 
 ### Bug Fixes
