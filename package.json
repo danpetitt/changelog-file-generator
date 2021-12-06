@@ -1,6 +1,6 @@
 {
   "name": "changelog-file-generator",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "description": "Changelog File Generator Github Action",
   "author": {
@@ -36,9 +36,11 @@
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@octokit/rest": "^18.12.0",
+    "glob": "^7.2.0",
     "octokit-commit-multiple-files": "^3.2.1"
   },
   "devDependencies": {
+    "@types/glob": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "@vercel/ncc": "^0.23.0",

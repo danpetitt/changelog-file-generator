@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import glob from 'glob';
 import { info, getInput, startGroup, endGroup, error } from '@actions/core';
 import { context, GitHub } from '@actions/github/lib/utils';
 import { Octokit } from '@octokit/rest';
@@ -54,26 +55,57 @@ export async function commitFiles(
     [key: string]: string;
   }
 
+  const globOptions: glob.IOptions = {
+    nonull: false,
+  };
   const fileInfo: FileChanges = {};
   for (const file of files) {
     info(`> Adding file '${file}'`);
+
+    glob(file, globOptions, (err, globFiles) => {
+      // globFiles is an array of filenames
+
+      // err is an error object or null.
+      if (err) {
+        error(
+          `> Failed to commit files because glob pattern failed: ${JSON.stringify(
+            err,
+          )}`,
+        );
+        throw new Error('Failed to commit files');
+      }
+
+      // If the `nonull` option is set, and nothing
+      // was found, then files is ["**/*.js"]
+      for (const globFile of globFiles) {
+        const content = fs.readFileSync(globFile, 'utf-8');
+        fileInfo[file] = content;
+      }
+    });
+
+    if (/\*/.test(file)) {
+      // Glob pattern
+    }
+
     const content = fs.readFileSync(file, 'utf-8');
     fileInfo[file] = content;
   }
 
-  info('> Committing changes');
+  const changes = [
+    {
+      message: commitMessage,
+      files: fileInfo,
+    },
+  ];
+
+  info(`> Committing changes: ${JSON.stringify(changes)}`);
   try {
     await octokitPlugin.repos.createOrUpdateFiles({
       owner,
       repo,
       branch,
       createBranch: false,
-      changes: [
-        {
-          message: commitMessage,
-          files: fileInfo,
-        },
-      ],
+      changes,
       committer: {
         name: username,
         email: useremail,
