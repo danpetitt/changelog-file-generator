@@ -52,7 +52,7 @@ Specify a file path to generate or update a change log file.
 
 #### `files_to_commit`
 
-Commits any files, like the updated changelog file, to the repo on completion (comma separated). Does not commit anything by default.
+Commits any files, like the updated changelog file, to the repo on completion (comma separated glob patterns or filepaths). Does not commit anything by default.
 
 #### `user`
 
@@ -75,13 +75,13 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v2.1.0
+uses: danpetitt/changelog-file-generator@v2.2.0
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
-  release_version: 'v2.1.0'
+  release_version: 'v2.2.0'
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
-  files_to_commit: './CHANGELOG.md',./coverage-badge-branch.svg
+  files_to_commit: 'CHANGELOG.md','*.svg'
   branch: main
   user: 'user@user.com'
   userName: 'A User'

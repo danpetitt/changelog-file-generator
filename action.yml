@@ -1,6 +1,6 @@
 name: 'Changelog File Generator'
 description: 'Changelog File Generator Github Action'
-author: 'Dan Petitt (Coderanger.com)'
+author: 'Dan Petitt (coderanger.com)'
 branding:
   icon: 'clock'
   color: 'blue'
@@ -20,7 +20,7 @@ inputs:
     description: 'Specify the path of a change log file for creating or updating; omit to not update any file'
     required: false
   files_to_commit:
-    description: 'Specify which files you would like to automatically commit once changed (comma separated); this allows you to also commit any files with updated version numbers'
+    description: 'Specify which files you would like to automatically commit once changed (comma separated glob patterns or filepaths); this allows you to also commit any files with updated version numbers'
     required: false
     default: ''
   user:
