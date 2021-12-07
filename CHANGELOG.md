@@ -1,5 +1,13 @@
 # Changelog for File Generator Github Action
 
+## [Release v2.2.1](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.2.1) (2021-12-07)
+
+### Bug Fixes
+
+* **Refactor:**
+  * Changed code layout ([e46146ba](https://github.com/danpetitt/changelog-file-generator/commit/e46146ba3716a576354c0adeefd5f988c36f3231))
+
+
 ## [Release v2.2.0](https://github.com/danpetitt/changelog-file-generator/releases/tag/v2.2.0) (2021-12-07)
 
 ### Bug Fixes
