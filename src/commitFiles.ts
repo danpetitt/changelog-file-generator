@@ -96,7 +96,7 @@ export async function commitFiles(
       },
     ];
 
-    info(`> Committing changes: ${JSON.stringify(changes)}`);
+    info(`> Committing ${fileCount} files`);
     try {
       await octokitPlugin.repos.createOrUpdateFiles({
         owner,
