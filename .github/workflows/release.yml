@@ -28,6 +28,8 @@ jobs:
           exclude: chore,ci
           release_version: ${{ steps.release_version.outputs.version }}
           files_to_commit: 'CHANGELOG.md'
+          user: danp@coderanger.com
+          userName: Dan Petitt
 
       - name: Create Release
         id: create_release

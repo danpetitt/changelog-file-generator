@@ -75,10 +75,10 @@ The generated changelog.
 ### Example usage
 
 ```yaml
-uses: danpetitt/changelog-file-generator@v2.2.0
+uses: danpetitt/changelog-file-generator@v2.2.1
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
-  release_version: 'v2.2.0'
+  release_version: 'v2.2.1'
   exclude: 'perf,other,breaking'
   file: './CHANGELOG.md'
   files_to_commit: 'CHANGELOG.md','*.svg'

@@ -7,6 +7,18 @@ import { Octokit } from '@octokit/rest';
 
 const baseDir = path.join(process.cwd(), getInput('cwd') || '');
 
+interface FileChanges {
+  [key: string]: string;
+}
+interface FilesToCommit {
+  count: number;
+  files: FileChanges;
+}
+
+const globOptions: glob.IOptions = {
+  nonull: false,
+};
+
 export async function commitFiles(
   octokit: InstanceType<typeof GitHub>,
   files: string[],
@@ -32,33 +44,57 @@ export async function commitFiles(
   info('> Creating Octokit Plugin');
   const octokitPlugin = new OctokitPlugin({ auth: `token ${token}` });
 
-  let branch = getInput('branch') || undefined;
-  if (!branch) {
-    branch = (
-      await octokit.repos.get({
-        owner,
-        repo,
-      })
-    ).data.default_branch;
-    info(`> Found default branch '${branch}'`);
-  }
-  info(`> Using branch '${branch}'`);
+  const branchName = await getBranchName(octokit, owner, repo);
+  info(`> Using branch '${branchName}'`);
 
-  const commitMessage = 'ci(pipeline updates): [skip ci]';
   const useremail =
     getInput('user', { required: false }) || 'actions@github.com';
   const username = getInput('userName', { required: false }) || 'Octokit Bot';
   info(`> Committer email '${useremail}'`);
   info(`> Committer name '${username}'`);
 
-  interface FileChanges {
-    [key: string]: string;
+  const fileInfo: FilesToCommit = findFiles(files);
+
+  if (fileInfo.count) {
+    const changes = [
+      {
+        message: 'ci(pipeline updates): [skip ci]',
+        files: fileInfo.files,
+      },
+    ];
+
+    info(`> Committing ${fileInfo.count} files`);
+    try {
+      await octokitPlugin.repos.createOrUpdateFiles({
+        owner,
+        repo,
+        branch: branchName,
+        createBranch: false,
+        changes,
+        committer: {
+          name: username,
+          email: useremail,
+        },
+        author: {
+          name: username,
+          email: useremail,
+        },
+      });
+    } catch (err) {
+      error(`> Failed to commit files because: ${JSON.stringify(err)}`);
+      throw new Error('Failed to commit files');
+    }
+    info('> Files committed, all done');
+  } else {
+    info('> No files to commit, all done');
   }
 
-  const globOptions: glob.IOptions = {
-    nonull: false,
-  };
+  endGroup();
+}
+
+function findFiles(files: string[]): FilesToCommit {
   const fileInfo: FileChanges = {};
+
   let fileCount = 0;
   for (const file of files) {
     info(`> Checking file '${file}'`);
@@ -87,40 +123,26 @@ export async function commitFiles(
       throw new Error('Failed to commit files');
     }
   }
+  return {
+    count: fileCount,
+    files: fileInfo,
+  };
+}
 
-  if (fileCount) {
-    const changes = [
-      {
-        message: commitMessage,
-        files: fileInfo,
-      },
-    ];
-
-    info(`> Committing ${fileCount} files`);
-    try {
-      await octokitPlugin.repos.createOrUpdateFiles({
+async function getBranchName(
+  octokit: InstanceType<typeof GitHub>,
+  owner: string,
+  repo: string,
+) {
+  let branch = getInput('branch') || undefined;
+  if (!branch) {
+    branch = (
+      await octokit.repos.get({
         owner,
         repo,
-        branch,
-        createBranch: false,
-        changes,
-        committer: {
-          name: username,
-          email: useremail,
-        },
-        author: {
-          name: username,
-          email: useremail,
-        },
-      });
-    } catch (err) {
-      error(`> Failed to commit files because: ${JSON.stringify(err)}`);
-      throw new Error('Failed to commit files');
-    }
-    info('> Files committed, all done');
-  } else {
-    info('> No files to commit, all done');
+      })
+    ).data.default_branch;
+    info(`> Found default branch '${branch}'`);
   }
-
-  endGroup();
+  return branch;
 }
