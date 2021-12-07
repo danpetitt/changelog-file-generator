@@ -1,13 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import globCB from 'glob';
+import glob from 'glob';
 import { info, getInput, startGroup, endGroup, error } from '@actions/core';
 import { context, GitHub } from '@actions/github/lib/utils';
 import { Octokit } from '@octokit/rest';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const promisify = require('util').promisify;
-const glob = promisify(globCB);
 
 const baseDir = path.join(process.cwd(), getInput('cwd') || '');
 
@@ -59,65 +55,72 @@ export async function commitFiles(
     [key: string]: string;
   }
 
-  const globOptions: globCB.IOptions = {
+  const globOptions: glob.IOptions = {
     nonull: false,
   };
   const fileInfo: FileChanges = {};
+  let fileCount = 0;
   for (const file of files) {
     info(`> Checking file '${file}'`);
 
     // globFiles is an array of filenames
     // If the `nonull` option is set, and nothing
     // was found, then files is ["**/*.js"]
-    const globFiles = await glob(file, globOptions)
-      .then((files: string[]) => {
-        return files;
-      })
-      .catch((err: Error) => {
-        error(
-          `> Failed to commit files because glob pattern failed: ${JSON.stringify(
-            err,
-          )}`,
-        );
-        throw new Error('Failed to commit files');
-      });
-
-    for (const globFile of globFiles) {
-      info(`> Adding file '${file}'`);
-      const content = fs.readFileSync(globFile, 'utf-8');
-      fileInfo[file] = content;
+    try {
+      const globFiles = glob.sync(file, globOptions);
+      for (const globFile of globFiles) {
+        if (globFile.indexOf('*') === -1) {
+          info(`> Adding file '${globFile}'`);
+          const content = fs.readFileSync(globFile, 'utf-8');
+          fileInfo[globFile] = content;
+          fileCount++;
+        } else {
+          info(`> Skipping bad file '${globFile}'`);
+        }
+      }
+    } catch (err: unknown) {
+      error(
+        `> Failed to commit files because glob pattern failed: ${JSON.stringify(
+          err,
+        )}`,
+      );
+      throw new Error('Failed to commit files');
     }
   }
 
-  const changes = [
-    {
-      message: commitMessage,
-      files: fileInfo,
-    },
-  ];
+  if (fileCount) {
+    const changes = [
+      {
+        message: commitMessage,
+        files: fileInfo,
+      },
+    ];
 
-  info(`> Committing changes: ${JSON.stringify(changes)}`);
-  try {
-    await octokitPlugin.repos.createOrUpdateFiles({
-      owner,
-      repo,
-      branch,
-      createBranch: false,
-      changes,
-      committer: {
-        name: username,
-        email: useremail,
-      },
-      author: {
-        name: username,
-        email: useremail,
-      },
-    });
-  } catch (err) {
-    error(`> Failed to commit files because: ${JSON.stringify(err)}`);
-    throw new Error('Failed to commit files');
+    info(`> Committing changes: ${JSON.stringify(changes)}`);
+    try {
+      await octokitPlugin.repos.createOrUpdateFiles({
+        owner,
+        repo,
+        branch,
+        createBranch: false,
+        changes,
+        committer: {
+          name: username,
+          email: useremail,
+        },
+        author: {
+          name: username,
+          email: useremail,
+        },
+      });
+    } catch (err) {
+      error(`> Failed to commit files because: ${JSON.stringify(err)}`);
+      throw new Error('Failed to commit files');
+    }
+    info('> Files committed, all done');
+  } else {
+    info('> No files to commit, all done');
   }
-  info('> Files committed, all done');
 
   endGroup();
 }
